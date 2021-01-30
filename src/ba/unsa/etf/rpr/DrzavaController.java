@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -13,6 +14,9 @@ import java.util.ArrayList;
 public class DrzavaController {
     public TextField fieldNaziv;
     public ChoiceBox<Grad> choiceGrad;
+    public ChoiceBox<Grad> choiceGradNajveci;
+    public RadioButton radioIsti;
+    public RadioButton radioDrugi;
     private Drzava drzava;
     private ObservableList<Grad> listGradovi;
 
@@ -23,13 +27,19 @@ public class DrzavaController {
 
     @FXML
     public void initialize() {
+        radioIsti.setSelected(true);
         choiceGrad.setItems(listGradovi);
+        choiceGradNajveci.setItems(listGradovi);
+
         if (drzava != null) {
             fieldNaziv.setText(drzava.getNaziv());
             choiceGrad.getSelectionModel().select(drzava.getGlavniGrad());
+            choiceGradNajveci.getSelectionModel().select(drzava.getNajveciGrad());
         } else {
             choiceGrad.getSelectionModel().selectFirst();
+            choiceGradNajveci.getSelectionModel().selectFirst();
         }
+        choiceGradNajveci.setDisable(true);
     }
 
     public Drzava getDrzava() {
@@ -53,6 +63,7 @@ public class DrzavaController {
         if (drzava == null) drzava = new Drzava();
         drzava.setNaziv(fieldNaziv.getText());
         drzava.setGlavniGrad(choiceGrad.getSelectionModel().getSelectedItem());
+        drzava.setNajveciGrad(choiceGradNajveci.getSelectionModel().getSelectedItem());
         closeWindow();
     }
 
@@ -64,5 +75,20 @@ public class DrzavaController {
     private void closeWindow() {
         Stage stage = (Stage) fieldNaziv.getScene().getWindow();
         stage.close();
+    }
+
+    public void radioIstiAction(ActionEvent actionEvent){
+        // disable
+        if(radioDrugi.isSelected()) radioDrugi.setSelected(false);
+        //if(radioIsti.isSelected()) radioIsti.setSelected(false);
+        choiceGradNajveci.setDisable(true);
+        choiceGradNajveci.getSelectionModel().select(choiceGrad.getSelectionModel().getSelectedItem());
+    }
+
+    public void radioDrugiAction(ActionEvent actionEvent){
+        //onda bira sta hoce
+        if(radioIsti.isSelected()) radioIsti.setSelected(false);
+        //if(radioDrugi.isSelected()) radioDrugi.setSelected(false);
+        choiceGradNajveci.setDisable(false);
     }
 }
